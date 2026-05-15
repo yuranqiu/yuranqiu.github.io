@@ -1,77 +1,42 @@
-<!-- markdownlint-disable-next-line -->
-<div align="center">
+# Agent Developer Portfolio
 
-  <!-- markdownlint-disable-next-line -->
-  # Chirpy Jekyll Theme
+🤖 个人主页，基于 GitHub Pages 部署
 
-  A minimal, responsive, and feature-rich Jekyll theme for technical writing.
+## 🚀 快速开始
 
-  [![CI][badge-ci]][ci]&nbsp;
-  [![Codacy Badge][badge-codacy]][codacy]&nbsp;
-  [![GitHub license][badge-license]][license]&nbsp;
-  [![Gem Version][badge-gem]][gem]&nbsp;
-  [![Open in Dev Containers][badge-open-container]][open-container]
+1. **Fork 此仓库** 到你的 GitHub 账户
+2. **编辑 `index.html`**：
+   - 修改 `<title>` 中的名字
+   - 修改 `h1` 标题为你的名字
+   - 修改「关于我」部分
+   - 更新技能标签
+   - 添加你的项目链接
+   - 修改联系方式
+3. **启用 GitHub Pages**：
+   - 进入 Settings → Pages
+   - Source 选择 `main` 分支
+   - 保存后等待部署
 
-  [**Live Demo** →][demo]
+## 📝 自定义指南
 
-  [![Devices Mockup](https://chirpy-img.netlify.app/commons/devices-mockup.png)][demo]
+| 修改内容 | 位置 |
+|---------|------|
+| 名字 | `index.html` 第 70 行 `<h1>` |
+| 头像 | CSS 中 `.avatar::before` 改为图片或 emoji |
+| 技能 | `.skills` 部分的 `<span>` 标签 |
+| 项目 | `.projects-grid` 区域 |
+| 链接 | `.links` 区域的 `<a>` 标签 |
 
-</div>
+## 🎨 主题色
 
-## Features
+修改 CSS 变量快速换色：
+```css
+:root {
+    --accent: #00d4aa;      /* 主色调 - 科技绿 */
+    --accent-secondary: #7c3aed;  /* 副色调 - 紫色 */
+}
+```
 
-- **Design & UX** - Responsive layout, Dark/Light modes, Localized UI language,
-  and Dark mode images.
-- **Content Management** - Pinned posts, Hierarchical categories, Trending tags,
-  Auto-generated Table of Contents, and Last modified dates.
-- **Rich Text Support** - Syntax highlighting, Mathematical expressions, Mermaid
-  diagrams & flowcharts, and Embedded media.
-- **Interactivity & Outreach** - Built-in search, Multiple comment systems, and
-  Atom feeds.
-- **System & Optimization** - PWA support, integrated Web analytics, and
-  advanced SEO performance.
+## 📄 许可证
 
-## Documentation
-
-To learn how to use, develop, and upgrade the project, please refer to the
-[Wiki][wiki].
-
-## Contributing
-
-Contributions (_pull requests_, _issues_, and _discussions_) are what make the
-open-source community such an amazing place to learn, inspire, and create. Any
-contributions you make are greatly appreciated.
-For details, please refer to our [Contributing Guidelines][contribute-guide].
-
-## Credits
-
-This project is built on the [Jekyll][jekyllrb] ecosystem and integrates a
-collection of [excellent libraries][lib]. Its avatar and favicon are sourced
-from [ClipartMAX][clipartmax].
-
-Furthermore, thanks to everyone who contributed to the development of this project!
-
-[![all-contributors][contributors-avatar]][contributors]
-
-## License
-
-This project is licensed under the [MIT License][license].
-
-[badge-ci]: https://img.shields.io/github/actions/workflow/status/cotes2020/jekyll-theme-chirpy/ci.yml?logo=github
-[badge-codacy]: https://img.shields.io/codacy/grade/4e556876a3c54d5e8f2d2857c4f43894?logo=codacy
-[badge-license]: https://img.shields.io/github/license/cotes2020/jekyll-theme-chirpy?color=goldenrod
-[badge-gem]: https://img.shields.io/gem/v/jekyll-theme-chirpy?&logo=RubyGems&logoColor=ghostwhite&label=gem&color=orange
-[badge-open-container]: https://img.shields.io/badge/Dev_Containers-Open-deepskyblue?logo=linuxcontainers
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[ci]: https://github.com/cotes2020/jekyll-theme-chirpy/actions/workflows/ci.yml?query=event%3Apush+branch%3Amaster
-[codacy]: https://app.codacy.com/gh/cotes2020/jekyll-theme-chirpy/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
-[license]: https://github.com/cotes2020/jekyll-theme-chirpy/blob/master/LICENSE
-[open-container]: https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/cotes2020/jekyll-theme-chirpy
-[jekyllrb]: https://jekyllrb.com/
-[clipartmax]: https://www.clipartmax.com/middle/m2i8b1m2K9Z5m2K9_ant-clipart-childrens-ant-cute/
-[demo]: https://cotes2020.github.io/chirpy-demo/
-[wiki]: https://github.com/cotes2020/jekyll-theme-chirpy/wiki
-[contribute-guide]: https://github.com/cotes2020/jekyll-theme-chirpy/blob/master/docs/CONTRIBUTING.md
-[contributors]: https://github.com/cotes2020/jekyll-theme-chirpy/graphs/contributors
-[contributors-avatar]: https://contrib.rocks/image?repo=cotes2020/jekyll-theme-chirpy&columns=16&max=112
-[lib]: https://github.com/cotes2020/chirpy-static-assets
+MIT License
