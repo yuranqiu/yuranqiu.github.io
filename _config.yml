@@ -1,0 +1,176 @@
+# The Site Configuration
+
+# Import the theme
+theme: jekyll-theme-chirpy
+
+# The language of the webpage
+lang: zh-CN
+
+# Change to your timezone
+timezone: Asia/Shanghai
+
+# jekyll-seo-tag settings
+title: 岳睿清
+
+tagline: Python后端 & AI Agent开发者
+
+description: >
+  岳睿清 - 中国科学院大学计算机硕士 | Python后端与AI Agent开发者 | 绿盟科技创新研究院实习研究员
+
+url: "https://yuranqiu.github.io"
+
+github:
+  username: yuranqiu
+
+twitter:
+  username:
+
+social:
+  name: 岳睿清
+  email: yueruiqing25@mails.ucas.ac.cn
+  links:
+    - https://github.com/yuranqiu
+    - https://www.linkedin.com/in/ruiqing-yue-90628a40a
+
+# Site Verification Settings
+webmaster_verifications:
+  google:
+  bing:
+  alexa:
+  yandex:
+  baidu:
+  facebook:
+
+# Web Analytics Settings
+analytics:
+  google:
+    id:
+
+# Page views settings
+pageviews:
+  provider:
+
+# Prefer color scheme
+theme_mode: dark
+
+# CDN
+cdn: "https://chirpy-img.netlify.app"
+
+# Avatar
+avatar: "/images/head.png"
+
+# Social preview image
+social_preview_image:
+
+# TOC
+toc: true
+
+actions:
+  edit_post:
+    enabled: false
+    url: ""
+    static_url: false
+
+comments:
+  provider:
+  disqus:
+    shortname:
+  utterances:
+    repo:
+    issue_term:
+  giscus:
+    repo:
+    repo_id:
+    category:
+    category_id:
+    mapping:
+    strict:
+    input_position:
+    lang:
+    reactions_enabled:
+
+# Self-hosted static assets
+assets:
+  self_host:
+    enabled:
+
+# PWA
+pwa:
+  enabled: true
+  cache:
+    enabled: true
+    deny_paths:
+
+paginate: 10
+
+baseurl: ""
+
+# ------------ The following options are not recommended to be modified ------------------
+
+kramdown:
+  footnote_backlink: "&#8617;&#xfe0e;"
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: highlight
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+
+collections:
+  tabs:
+    output: true
+    sort_by: order
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      comments: true
+      toc: true
+      permalink: /posts/:title/
+  - scope:
+      path: _drafts
+    values:
+      comments: false
+  - scope:
+      path: ""
+      type: tabs
+    values:
+      layout: page
+      permalink: /:title/
+
+sass:
+  style: compressed
+
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  profile: false
+  blanklines: false
+  ignore:
+    envs: [development]
+
+exclude:
+  - "*.gem"
+  - "*.gemspec"
+  - docs
+  - tools
+  - README.md
+  - LICENSE
+  - purgecss.js
+  - "*.config.js"
+  - "package*.json"
+
+jekyll-archives:
+  enabled: [categories, tags]
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/
