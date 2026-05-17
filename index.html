@@ -159,13 +159,6 @@
 
     <hr>
 
-    <!-- Clustermap -->
-    <div style="text-align:center;margin-top:16px;">
-      <div style="display:inline-block;width:150px;">
-        <script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=wRczDcorvg7Bh8z2vH_cr2wUhFbxPxGbticcgCJfOSQ"></script>
-      </div>
-    </div>
-
     <!-- Misc -->
     <div class="section-heading">Misc</div>
     <div class="section-body">
@@ -175,6 +168,13 @@
     </div>
 
     <hr>
+
+    <!-- Clustermap -->
+    <div style="text-align:center;margin-top:16px;">
+      <div style="display:inline-block;width:150px;">
+        <script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=wRczDcorvg7Bh8z2vH_cr2wUhFbxPxGbticcgCJfOSQ"></script>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -192,46 +192,63 @@
         mapStyle: 'amap://styles/normal'
       });
 
-      AMap.plugin(['AMap.DistrictSearch'], function() {
-        var district = new AMap.DistrictSearch({
-          extensions: 'all',
-          subdistrict: 0
-        });
+      var cities = [
+        {name: '北京', pos: [116.4074, 39.9042], r: 22000},
+        {name: '天津', pos: [117.2010, 39.0842], r: 18000},
+        {name: '上海', pos: [121.4737, 31.2304], r: 22000},
+        {name: '重庆', pos: [106.5516, 29.5630], r: 22000},
+        {name: '武汉', pos: [114.3054, 30.5931], r: 16000},
+        {name: '宜昌', pos: [111.2868, 30.6919], r: 12000},
+        {name: '孝感', pos: [113.9166, 30.9244], r: 12000},
+        {name: '恩施', pos: [109.4882, 30.2722], r: 12000},
+        {name: '长沙', pos: [112.9388, 28.2280], r: 16000},
+        {name: '岳阳', pos: [113.1289, 29.3569], r: 12000},
+        {name: '唐山', pos: [118.1802, 39.6309], r: 14000},
+        {name: '秦皇岛', pos: [119.6004, 39.9354], r: 12000},
+        {name: '保定', pos: [115.4646, 38.8739], r: 14000},
+        {name: '廊坊', pos: [116.6838, 39.5380], r: 12000},
+        {name: '无锡', pos: [120.3119, 31.4912], r: 12000},
+        {name: '苏州', pos: [120.5853, 31.2989], r: 14000},
+        {name: '青岛', pos: [120.3826, 36.0671], r: 14000},
+        {name: '西安', pos: [108.9398, 34.3416], r: 16000},
+        {name: '汉中', pos: [107.0238, 33.0676], r: 12000},
+        {name: '成都', pos: [104.0665, 30.5723], r: 18000},
+        {name: '德阳', pos: [104.3980, 31.1268], r: 10000},
+        {name: '绵阳', pos: [104.6791, 31.4675], r: 12000},
+        {name: '广元', pos: [105.8434, 32.4357], r: 10000},
+        {name: '遂宁', pos: [105.5927, 30.5328], r: 10000},
+        {name: '内江', pos: [105.0584, 29.5802], r: 10000},
+        {name: '乐山', pos: [103.7654, 29.5523], r: 10000},
+        {name: '南充', pos: [106.1107, 30.8378], r: 12000},
+        {name: '眉山', pos: [103.8485, 30.0754], r: 10000},
+        {name: '巴中', pos: [106.7475, 31.8679], r: 10000},
+        {name: '资阳', pos: [104.6276, 30.1289], r: 10000},
+        {name: '昆明', pos: [102.8329, 24.8801], r: 16000},
+        {name: '玉溪', pos: [102.5469, 24.3505], r: 10000},
+        {name: '普洱', pos: [100.9723, 22.7773], r: 10000},
+        {name: '红河', pos: [103.3748, 23.3631], r: 14000},
+        {name: '杭州', pos: [120.1551, 30.2741], r: 16000},
+        {name: '桂林', pos: [110.1791, 25.2345], r: 14000},
+        {name: '贵阳', pos: [106.6302, 26.6470], r: 14000},
+        {name: '黔东南', pos: [107.9775, 26.5833], r: 16000},
+        {name: '海口', pos: [110.3492, 20.0174], r: 12000},
+        {name: '文昌', pos: [110.7977, 19.5433], r: 10000},
+        {name: '万宁', pos: [110.3911, 18.7951], r: 10000},
+        {name: '定安', pos: [110.3586, 19.6814], r: 8000},
+        {name: '陵水', pos: [110.0372, 18.5060], r: 10000},
+        {name: '琼海', pos: [110.4921, 19.2460], r: 10000}
+      ];
 
-        var cities = [
-          '北京市', '天津市', '上海市', '重庆市',
-          '武汉市', '宜昌市', '孝感市', '恩施土家族苗族自治州',
-          '长沙市', '岳阳市',
-          '唐山市', '秦皇岛市', '保定市', '廊坊市',
-          '无锡市', '苏州市',
-          '青岛市',
-          '西安市', '汉中市',
-          '成都市', '德阳市', '绵阳市', '广元市', '遂宁市', '内江市', '乐山市', '南充市', '眉山市', '巴中市', '资阳市',
-          '昆明市', '玉溪市', '普洱市', '红河哈尼族彝族自治州',
-          '杭州市',
-          '桂林市', '贵阳市', '黔东南苗族侗族自治州',
-          '海口市', '文昌市', '万宁市', '定安县', '陵水黎族自治县', '琼海市'
-        ];
-
-        cities.forEach(function(city) {
-          district.search(city, function(status, result) {
-            if (status === 'complete' && result.districtList && result.districtList.length > 0) {
-              var bounds = result.districtList[0].boundaries;
-              if (bounds) {
-                for (var i = 0; i < bounds.length; i++) {
-                  new AMap.Polygon({
-                    path: bounds[i],
-                    strokeColor: '#1772d0',
-                    strokeWeight: 1,
-                    strokeOpacity: 0.6,
-                    fillColor: '#1772d0',
-                    fillOpacity: 0.25,
-                    map: map
-                  });
-                }
-              }
-            }
-          });
+      cities.forEach(function(c) {
+        new AMap.Circle({
+          center: c.pos,
+          radius: c.r,
+          fillColor: '#1772d0',
+          fillOpacity: 0.35,
+          strokeColor: '#1772d0',
+          strokeWeight: 1,
+          strokeOpacity: 0.5,
+          map: map
         });
       });
     })();
