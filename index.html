@@ -92,13 +92,21 @@
     <!-- Selected Publications -->
     <div class="section-heading">Selected Publications</div>
 
-    <div class="section-body">
-      <p>
-        （此处可添加代表性论文，格式参考：<a href="#">Paper Title</a> &nbsp;&nbsp; <a href="#">[Code]</a><br>
-        <b>Ruiqing Yue</b>, Co-authors<br>
-        <em><b>Venue</b></em>, Year<br>
-        One-sentence summary of the contribution.）
-      </p>
+    <div class="pub-row">
+      <div class="pub-image">
+        <img src="assets/img/spore-fig1.png" alt="Spore Figure 1" style="width:100%;max-width:210px;">
+      </div>
+      <div class="pub-text">
+        <p>
+          <a href="https://arxiv.org/abs/2604.23711" target="_blank">Spore: Efficient and Training-Free Privacy Extraction Attack on LLMs via Inference-Time Hybrid Probing</a>
+          <br>
+          Yu Cui, <b>Ruiqing Yue</b>, Hang Fu, Sicheng Pan, Zhuoyu Sun, Baohan Huang, Haibin Zhang, Cong Zuo, Licheng Wang
+          <br>
+          <em><b>arXiv</b></em>, 2026
+          <br>
+          We propose a training-free privacy extraction attack targeting LLM agent memory via inference-time hybrid probing, achieving high success rate with low query cost in both black-box and gray-box settings.
+        </p>
+      </div>
     </div>
 
     <hr>
@@ -145,6 +153,12 @@
 
     <hr>
 
+    <!-- Footprints -->
+    <div class="section-heading">Footprints</div>
+    <div id="amap-container" style="width:100%;height:280px;margin-bottom:16px;"></div>
+
+    <hr>
+
     <!-- Clustermap -->
     <div style="text-align:center;margin-top:16px;">
       <div style="display:inline-block;width:150px;">
@@ -168,6 +182,28 @@
     </footer>
 
   </div>
+
+  <script src="https://webapi.amap.com/maps?v=2.0&key=YOUR_AMAP_KEY"></script>
+  <script>
+    (function() {
+      var map = new AMap.Map('amap-container', {
+        zoom: 4,
+        center: [108.93977, 34.341574],
+        mapStyle: 'amap://styles/normal'
+      });
+      var cities = [
+        {name: 'Beijing', pos: [116.397428, 39.90923]},
+        {name: 'Shanghai', pos: [121.473701, 31.230416]},
+        {name: 'Hangzhou', pos: [120.15507, 30.274084]},
+        {name: 'Chengdu', pos: [104.066541, 30.572269]},
+        {name: 'Xi\'an', pos: [108.93977, 34.341574]},
+        {name: 'Guangzhou', pos: [113.264385, 23.129163]}
+      ];
+      cities.forEach(function(c) {
+        new AMap.Marker({position: c.pos, title: c.name, map: map});
+      });
+    })();
+  </script>
 
 </body>
 </html>
