@@ -187,20 +187,43 @@
   <script>
     (function() {
       var map = new AMap.Map('amap-container', {
-        zoom: 4,
-        center: [108.93977, 34.341574],
+        zoom: 5,
+        center: [108.0, 33.0],
         mapStyle: 'amap://styles/normal'
       });
-      var cities = [
-        {name: 'Beijing', pos: [116.397428, 39.90923]},
-        {name: 'Shanghai', pos: [121.473701, 31.230416]},
-        {name: 'Hangzhou', pos: [120.15507, 30.274084]},
-        {name: 'Chengdu', pos: [104.066541, 30.572269]},
-        {name: 'Xi\'an', pos: [108.93977, 34.341574]},
-        {name: 'Guangzhou', pos: [113.264385, 23.129163]}
-      ];
-      cities.forEach(function(c) {
-        new AMap.Marker({position: c.pos, title: c.name, map: map});
+
+      AMap.plugin(['AMap.DistrictSearch'], function() {
+        var district = new AMap.DistrictSearch({
+          extensions: 'all',
+          subdistrict: 0
+        });
+
+        var cities = [
+          '北京市', '天津市', '上海市', '重庆市',
+          '桂林市', '贵阳市', '黔东南苗族侗族自治州',
+          '海口市', '琼海市'
+        ];
+
+        cities.forEach(function(city) {
+          district.search(city, function(status, result) {
+            if (status === 'complete' && result.districtList && result.districtList.length > 0) {
+              var bounds = result.districtList[0].boundaries;
+              if (bounds) {
+                for (var i = 0; i < bounds.length; i++) {
+                  new AMap.Polygon({
+                    path: bounds[i],
+                    strokeColor: '#1772d0',
+                    strokeWeight: 1,
+                    strokeOpacity: 0.6,
+                    fillColor: '#1772d0',
+                    fillOpacity: 0.25,
+                    map: map
+                  });
+                }
+              }
+            }
+          });
+        });
       });
     })();
   </script>
