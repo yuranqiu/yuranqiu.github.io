@@ -155,7 +155,9 @@
 
     <!-- Footprints -->
     <div class="section-heading">Footprints</div>
-    <div id="amap-container" style="width:100%;height:280px;margin-bottom:16px;"></div>
+    <div style="text-align:center;margin-bottom:16px;">
+      <img src="assets/img/footprints.png" alt="Footprints" style="max-width:100%;height:auto;border:1px solid #e5e7eb;border-radius:4px;">
+    </div>
 
     <hr>
 
@@ -188,77 +190,6 @@
     </footer>
 
   </div>
-
-  <script src="https://webapi.amap.com/maps?v=2.0&key=cd3b5db269daf2cfe3b0ad0a5e4e1b8f"></script>
-  <script>
-    (function() {
-      var map = new AMap.Map('amap-container', {
-        zoom: 5,
-        center: [108.0, 33.0],
-        mapStyle: 'amap://styles/normal'
-      });
-
-      var cities = [
-        '北京市','天津市','上海市','重庆市',
-        '武汉市','宜昌市','孝感市','恩施土家族苗族自治州',
-        '长沙市','岳阳市',
-        '唐山市','秦皇岛市','保定市','廊坊市',
-        '无锡市','苏州市',
-        '青岛市',
-        '西安市','汉中市',
-        '成都市','德阳市','绵阳市','广元市','遂宁市','内江市','乐山市','南充市','眉山市','巴中市','资阳市',
-        '昆明市','玉溪市','普洱市','红河哈尼族彝族自治州',
-        '杭州市',
-        '桂林市','贵阳市','黔东南苗族侗族自治州',
-        '海口市','文昌市','万宁市','定安县','陵水黎族自治县','琼海市'
-      ];
-
-      AMap.plugin(['AMap.DistrictSearch'], function() {
-        var district = new AMap.DistrictSearch({
-          extensions: 'all',
-          subdistrict: 0
-        });
-
-        cities.forEach(function(city) {
-          district.search(city, function(status, result) {
-            var ok = false;
-            if (status === 'complete' && result.districtList && result.districtList.length > 0) {
-              var bounds = result.districtList[0].boundaries;
-              if (bounds && bounds.length > 0) {
-                ok = true;
-                var polygons = [];
-                for (var i = 0; i < bounds.length; i++) {
-                  polygons.push(new AMap.Polygon({
-                    path: bounds[i],
-                    fillColor: '#1772d0',
-                    fillOpacity: 0.30,
-                    strokeColor: '#1772d0',
-                    strokeWeight: 1,
-                    strokeOpacity: 0.4
-                  }));
-                }
-                map.add(polygons);
-              }
-            }
-            if (!ok) {
-              var center = result && result.districtList && result.districtList[0] && result.districtList[0].center;
-              if (center) {
-                map.add(new AMap.Circle({
-                  center: center,
-                  radius: 15000,
-                  fillColor: '#1772d0',
-                  fillOpacity: 0.30,
-                  strokeColor: '#1772d0',
-                  strokeWeight: 1,
-                  strokeOpacity: 0.4
-                }));
-              }
-            }
-          });
-        });
-      });
-    })();
-  </script>
 
 </body>
 </html>
