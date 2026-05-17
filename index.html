@@ -155,76 +155,76 @@
 
     <!-- Footprints -->
     <div class="section-heading">Footprints</div>
-    <div id="footprints-chart" style="width:100%;height:380px;margin-bottom:16px;"></div>
+    <div id="footprints-chart" style="width:100%;height:420px;margin-bottom:16px;"></div>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <script>
       (function() {
         var chartDom = document.getElementById('footprints-chart');
         if (!chartDom) return;
-        fetch('assets/geo/china.json')
-          .then(function(r) { return r.json(); })
-          .then(function(geoJson) {
-            echarts.registerMap('china', geoJson);
-            var chart = echarts.init(chartDom);
-            var cities = [
-              {name:'北京',value:[116.4074,39.9042]},{name:'天津',value:[117.2010,39.0842]},{name:'上海',value:[121.4737,31.2304]},
-              {name:'重庆',value:[106.5516,29.5630]},{name:'武汉',value:[114.3054,30.5931]},{name:'宜昌',value:[111.2868,30.6919]},
-              {name:'孝感',value:[113.9166,30.9244]},{name:'恩施',value:[109.4882,30.2722]},{name:'长沙',value:[112.9388,28.2280]},
-              {name:'岳阳',value:[113.1289,29.3569]},{name:'唐山',value:[118.1802,39.6309]},{name:'秦皇岛',value:[119.6004,39.9354]},
-              {name:'保定',value:[115.4646,38.8739]},{name:'廊坊',value:[116.6838,39.5380]},{name:'无锡',value:[120.3119,31.4912]},
-              {name:'苏州',value:[120.5853,31.2989]},{name:'青岛',value:[120.3826,36.0671]},{name:'西安',value:[108.9398,34.3416]},
-              {name:'汉中',value:[107.0238,33.0676]},{name:'成都',value:[104.0665,30.5723]},{name:'德阳',value:[104.3980,31.1268]},
-              {name:'绵阳',value:[104.6791,31.4675]},{name:'广元',value:[105.8434,32.4357]},{name:'遂宁',value:[105.5927,30.5328]},
-              {name:'内江',value:[105.0584,29.5802]},{name:'乐山',value:[103.7654,29.5523]},{name:'南充',value:[106.1107,30.8378]},
-              {name:'眉山',value:[103.8485,30.0754]},{name:'巴中',value:[106.7475,31.8679]},{name:'资阳',value:[104.6276,30.1289]},
-              {name:'昆明',value:[102.8329,24.8801]},{name:'玉溪',value:[102.5469,24.3505]},{name:'普洱',value:[100.9723,22.7773]},
-              {name:'红河',value:[103.3748,23.3631]},{name:'杭州',value:[120.1551,30.2741]},{name:'桂林',value:[110.1791,25.2345]},
-              {name:'贵阳',value:[106.6302,26.6470]},{name:'黔东南',value:[107.9775,26.5833]},{name:'海口',value:[110.3492,20.0174]},
-              {name:'文昌',value:[110.7977,19.5433]},{name:'万宁',value:[110.3911,18.7951]},{name:'定安',value:[110.3586,19.6814]},
-              {name:'陵水',value:[110.0372,18.5060]},{name:'琼海',value:[110.4921,19.2460]}
-            ];
-            chart.setOption({
-              geo: {
-                map: 'china',
+
+        Promise.all([
+          fetch('assets/geo/china.json').then(function(r){ return r.json(); }),
+          fetch('assets/geo/china-cities.json').then(function(r){ return r.json(); })
+        ]).then(function(results) {
+          var provinceGeo = results[0];
+          var cityGeo = results[1];
+
+          echarts.registerMap('china', provinceGeo);
+          echarts.registerMap('china-cities', cityGeo);
+
+          var chart = echarts.init(chartDom);
+
+          chart.setOption({
+            geo: {
+              map: 'china',
+              roam: true,
+              zoom: 1.15,
+              label: { show: false },
+              itemStyle: {
+                areaColor: '#f3f4f6',
+                borderColor: '#d1d5db',
+                borderWidth: 1
+              },
+              emphasis: {
+                disabled: true
+              }
+            },
+            series: [
+              {
+                type: 'map',
+                map: 'china-cities',
+                geoIndex: 0,
                 roam: true,
                 zoom: 1.15,
+                label: {
+                  show: true,
+                  fontSize: 10,
+                  color: '#374151'
+                },
                 itemStyle: {
-                  areaColor: '#f3f4f6',
-                  borderColor: '#d1d5db',
+                  areaColor: '#bfdbfe',
+                  borderColor: '#93c5fd',
                   borderWidth: 1
                 },
                 emphasis: {
-                  itemStyle: { areaColor: '#e5e7eb' },
-                  label: { show: false }
-                }
-              },
-              series: [{
-                type: 'effectScatter',
-                coordinateSystem: 'geo',
-                data: cities,
-                symbolSize: 8,
-                showEffectOn: 'render',
-                rippleEffect: {
-                  brushType: 'stroke',
-                  scale: 3,
-                  period: 4
+                  label: { show: true },
+                  itemStyle: {
+                    areaColor: '#93c5fd'
+                  }
                 },
-                itemStyle: {
-                  color: '#1772d0',
-                  shadowBlur: 4,
-                  shadowColor: 'rgba(23,114,208,0.4)'
+                select: {
+                  disabled: true
                 },
-                label: {
-                  show: false
-                }
-              }]
-            });
-            window.addEventListener('resize', function() { chart.resize(); });
-          })
-          .catch(function(err) {
-            console.error('地图加载失败:', err);
-            chartDom.innerHTML = '<p style="text-align:center;color:#999;padding-top:140px;">地图加载失败，请刷新重试</p>';
+                data: []
+              }
+            ]
           });
+
+          window.addEventListener('resize', function() { chart.resize(); });
+        }).catch(function(err) {
+          console.error('地图加载失败:', err);
+          chartDom.innerHTML = '<p style="text-align:center;color:#999;padding-top:160px;">地图加载失败，请刷新重试</p>';
+        });
       })();
     </script>
 
