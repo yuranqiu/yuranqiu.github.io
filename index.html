@@ -20,7 +20,7 @@
         <p class="profile-name">岳睿清 / Ruiqing Yue</p>
 
         <p>
-          I am a M.S. student at UCAS, working on LLM-based multi-agent systems for network asset fingerprinting.
+          I am a M.S. student at UCAS, working on LLM-based multi-agent systems.
         </p>
 
         <p><b>Research interests:</b> AI Agent & Multi-Agent Systems, LLM Engineering, Backend System Architecture</p>
@@ -246,16 +246,17 @@
       ];
 
       cities.forEach(function(c) {
-        new AMap.Circle({
+        var marker = new AMap.CircleMarker({
           center: c.pos,
-          radius: c.r,
+          radius: 7,
           fillColor: '#1772d0',
-          fillOpacity: 0.35,
-          strokeColor: '#1772d0',
-          strokeWeight: 1,
-          strokeOpacity: 0.5,
-          map: map
+          fillOpacity: 0.9,
+          strokeColor: '#ffffff',
+          strokeWeight: 2,
+          strokeOpacity: 1,
+          zIndex: 100
         });
+        map.add(marker);
       });
     })();
   </script>
