@@ -240,21 +240,23 @@
             map.addControl(new AMap.Scale({ position: { bottom: '20px', left: '15px' } }));
           });
 
-          // Load province GeoJSON and draw visited regions
-          fetch('assets/geo/china.json')
-            .then(function(r) { return r.json(); })
-            .then(function(geoJson) {
+          // Load city GeoJSON (china-merged) and draw visited regions
+          Promise.all([
+            fetch('assets/geo/china-merged.json').then(function(r) { return r.json(); })
+          ])
+            .then(function(results) {
+              var cityGeoJson = results[0];
               var visitedNames = new Set(visitedLocations.map(function(l) { return l.name; }));
               var visitedPolygons = [];
 
-              geoJson.features.forEach(function(feature) {
-                var name = feature.properties.name.replace(/市|省|自治区|回族|壮族|维吾尔|特别行政区/g, '');
+              cityGeoJson.features.forEach(function(feature) {
+                var name = feature.properties.name;
                 if (!visitedNames.has(name)) return;
 
                 var coords = feature.geometry.coordinates;
-                var polygons = coords.length === 1 ? coords : coords[0];
+                var rings = feature.geometry.type === 'Polygon' ? [coords] : coords;
 
-                polygons.forEach(function(ring) {
+                rings.forEach(function(ring) {
                   var poly = new AMap.Polygon({
                     path: ring,
                     strokeColor: '#5ee7df',
@@ -274,22 +276,6 @@
                 map.setFitView(visitedPolygons, false, [60, 60, 60, 60]);
               }
             });
-
-          // Add markers for visited cities
-          visitedLocations.forEach(function(loc) {
-            var parts = loc.coordinates.split(',');
-            var lng = parseFloat(parts[0]);
-            var lat = parseFloat(parts[1]);
-
-            var marker = new AMap.Marker({
-              position: [lng, lat],
-              content: '<div style="width:12px;height:12px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
-              offset: new AMap.Pixel(-6, -6),
-              map: map
-            });
-
-            marker.setTitle(loc.name);
-          });
 
           // Resize handler
           window.addEventListener('resize', function() { map.resize(); });
