@@ -161,7 +161,7 @@
       (function() {
         var chartDom = document.getElementById('footprints-chart');
         if (!chartDom) return;
-        fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
+        fetch('assets/geo/china.json')
           .then(function(r) { return r.json(); })
           .then(function(geoJson) {
             echarts.registerMap('china', geoJson);
