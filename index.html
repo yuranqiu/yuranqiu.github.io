@@ -161,39 +161,22 @@
       (function() {
         var chartDom = document.getElementById('footprints-chart');
         if (!chartDom) return;
-
-        Promise.all([
-          fetch('assets/geo/china.json').then(function(r){ return r.json(); }),
-          fetch('assets/geo/china-cities.json').then(function(r){ return r.json(); })
-        ]).then(function(results) {
-          var provinceGeo = results[0];
-          var cityGeo = results[1];
-
-          echarts.registerMap('china', provinceGeo);
-          echarts.registerMap('china-cities', cityGeo);
-
-          var chart = echarts.init(chartDom);
-
-          chart.setOption({
-            geo: {
-              map: 'china',
-              roam: true,
-              zoom: 1.15,
-              label: { show: false },
-              itemStyle: {
-                areaColor: '#f3f4f6',
-                borderColor: '#d1d5db',
-                borderWidth: 1
-              },
-              emphasis: {
-                disabled: true
-              }
-            },
-            series: [
-              {
+        fetch('assets/geo/china-merged.json')
+          .then(function(r) { return r.json(); })
+          .then(function(geoJson) {
+            echarts.registerMap('china', geoJson);
+            var chart = echarts.init(chartDom);
+            var visitedNames = new Set([
+              '北京','天津','上海','重庆','武汉','宜昌','孝感','恩施','长沙','岳阳',
+              '唐山','秦皇岛','保定','廊坊','无锡','苏州','青岛','西安','汉中',
+              '成都','德阳','绵阳','广元','遂宁','内江','乐山','南充','眉山','巴中','资阳',
+              '昆明','玉溪','普洱','红河','杭州','桂林','贵阳','黔东南',
+              '海口','文昌','万宁','定安','陵水','琼海'
+            ]);
+            chart.setOption({
+              series: [{
                 type: 'map',
-                map: 'china-cities',
-                geoIndex: 0,
+                map: 'china',
                 roam: true,
                 zoom: 1.15,
                 label: {
@@ -202,29 +185,29 @@
                   color: '#374151'
                 },
                 itemStyle: {
-                  areaColor: '#bfdbfe',
-                  borderColor: '#93c5fd',
+                  areaColor: function(params) {
+                    return visitedNames.has(params.name) ? '#bfdbfe' : '#f3f4f6';
+                  },
+                  borderColor: function(params) {
+                    return visitedNames.has(params.name) ? '#93c5fd' : '#d1d5db';
+                  },
                   borderWidth: 1
                 },
                 emphasis: {
-                  label: { show: true },
-                  itemStyle: {
-                    areaColor: '#93c5fd'
-                  }
+                  disabled: true
                 },
                 select: {
                   disabled: true
                 },
                 data: []
-              }
-            ]
+              }]
+            });
+            window.addEventListener('resize', function() { chart.resize(); });
+          })
+          .catch(function(err) {
+            console.error('地图加载失败:', err);
+            chartDom.innerHTML = '<p style="text-align:center;color:#999;padding-top:160px;">地图加载失败，请刷新重试</p>';
           });
-
-          window.addEventListener('resize', function() { chart.resize(); });
-        }).catch(function(err) {
-          console.error('地图加载失败:', err);
-          chartDom.innerHTML = '<p style="text-align:center;color:#999;padding-top:160px;">地图加载失败，请刷新重试</p>';
-        });
       })();
     </script>
 
