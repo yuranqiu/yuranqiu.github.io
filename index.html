@@ -155,59 +155,147 @@
 
     <!-- Footprints -->
     <div class="section-heading">Footprints</div>
-    <div id="footprints-chart" style="width:100%;height:420px;margin-bottom:16px;"></div>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <div id="footprints-map" style="width:100%;height:420px;margin-bottom:16px;border-radius:8px;overflow:hidden;"></div>
     <script>
       (function() {
-        var chartDom = document.getElementById('footprints-chart');
-        if (!chartDom) return;
-        fetch('assets/geo/china-merged.json')
-          .then(function(r) { return r.json(); })
-          .then(function(geoJson) {
-            echarts.registerMap('china', geoJson);
-            var chart = echarts.init(chartDom);
-            var visitedNames = new Set([
-              '北京','天津','上海','重庆','武汉','宜昌','孝感','恩施','长沙','岳阳',
-              '唐山','秦皇岛','保定','廊坊','无锡','苏州','青岛','西安','汉中',
-              '成都','德阳','绵阳','广元','遂宁','内江','乐山','南充','眉山','巴中','资阳',
-              '昆明','玉溪','普洱','红河','杭州','桂林','贵阳','黔东南',
-              '海口','文昌','万宁','定安','陵水','琼海'
-            ]);
-            chart.setOption({
-              series: [{
-                type: 'map',
-                map: 'china',
-                roam: true,
-                zoom: 1.15,
-                label: {
-                  show: true,
-                  fontSize: 10,
-                  color: '#374151'
-                },
-                itemStyle: {
-                  areaColor: function(params) {
-                    return visitedNames.has(params.name) ? '#bfdbfe' : '#f3f4f6';
-                  },
-                  borderColor: function(params) {
-                    return visitedNames.has(params.name) ? '#93c5fd' : '#d1d5db';
-                  },
-                  borderWidth: 1
-                },
-                emphasis: {
-                  disabled: true
-                },
-                select: {
-                  disabled: true
-                },
-                data: []
-              }]
-            });
-            window.addEventListener('resize', function() { chart.resize(); });
-          })
-          .catch(function(err) {
-            console.error('地图加载失败:', err);
-            chartDom.innerHTML = '<p style="text-align:center;color:#999;padding-top:160px;">地图加载失败，请刷新重试</p>';
+        var container = document.getElementById('footprints-map');
+        if (!container) return;
+
+        var API_KEY = 'cd3b5db269daf2cfe3b0ad0a5e4e1b8f';
+
+        var visitedLocations = [
+          {name:'北京', coordinates:'116.4074,39.9042'},
+          {name:'天津', coordinates:'117.2008,39.1132'},
+          {name:'上海', coordinates:'121.4737,31.2304'},
+          {name:'重庆', coordinates:'106.5516,29.5630'},
+          {name:'武汉', coordinates:'114.2986,30.5844'},
+          {name:'宜昌', coordinates:'111.2908,30.7026'},
+          {name:'孝感', coordinates:'113.9267,30.9264'},
+          {name:'恩施', coordinates:'109.4870,30.2831'},
+          {name:'长沙', coordinates:'112.9823,28.1941'},
+          {name:'岳阳', coordinates:'113.1287,29.3629'},
+          {name:'唐山', coordinates:'118.1800,39.6300'},
+          {name:'秦皇岛', coordinates:'119.6000,39.9300'},
+          {name:'保定', coordinates:'115.4647,38.8744'},
+          {name:'廊坊', coordinates:'116.6830,39.5380'},
+          {name:'无锡', coordinates:'120.3017,31.5747'},
+          {name:'苏州', coordinates:'120.5853,31.2989'},
+          {name:'青岛', coordinates:'120.3826,36.0671'},
+          {name:'西安', coordinates:'108.9402,34.3416'},
+          {name:'汉中', coordinates:'107.0280,33.0677'},
+          {name:'成都', coordinates:'104.0658,30.6598'},
+          {name:'德阳', coordinates:'104.3980,31.1270'},
+          {name:'绵阳', coordinates:'104.6790,31.4670'},
+          {name:'广元', coordinates:'105.8297,32.4357'},
+          {name:'遂宁', coordinates:'105.5929,30.5130'},
+          {name:'内江', coordinates:'105.0584,29.5801'},
+          {name:'乐山', coordinates:'103.7658,29.5520'},
+          {name:'南充', coordinates:'106.1107,30.8373'},
+          {name:'眉山', coordinates:'103.8483,30.0756'},
+          {name:'巴中', coordinates:'106.7570,31.8690'},
+          {name:'资阳', coordinates:'104.6350,30.1220'},
+          {name:'昆明', coordinates:'102.7129,25.0433'},
+          {name:'玉溪', coordinates:'102.5451,24.3515'},
+          {name:'普洱', coordinates:'100.9660,22.8253'},
+          {name:'红河', coordinates:'103.3740,23.3636'},
+          {name:'杭州', coordinates:'120.1551,30.2741'},
+          {name:'桂林', coordinates:'110.2902,25.2742'},
+          {name:'贵阳', coordinates:'106.7135,26.5783'},
+          {name:'黔东南', coordinates:'107.9850,26.5830'},
+          {name:'海口', coordinates:'110.3492,20.2000'},
+          {name:'文昌', coordinates:'110.7537,19.5247'},
+          {name:'万宁', coordinates:'110.3900,18.8000'},
+          {name:'定安', coordinates:'110.3235,19.6848'},
+          {name:'陵水', coordinates:'110.0370,18.5050'},
+          {name:'琼海', coordinates:'110.4669,19.2576'}
+        ];
+
+        function initMap() {
+          if (typeof AMap === 'undefined') {
+            var script = document.createElement('script');
+            script.src = 'https://webapi.amap.com/maps?v=2.0&key=' + API_KEY;
+            script.onload = function() {
+              window._AMapSecurityConfig = { securityJsCode: '' };
+              createMap();
+            };
+            script.onerror = function() {
+              container.innerHTML = '<p style="text-align:center;color:#999;padding-top:180px;">地图加载失败</p>';
+            };
+            document.head.appendChild(script);
+          } else {
+            createMap();
+          }
+        }
+
+        function createMap() {
+          var map = new AMap.Map(container, {
+            zoom: 4,
+            center: [105, 36],
+            mapStyle: 'amap://styles/normal',
+            viewMode: '2D',
+            pitch: 0
           });
+
+          AMap.plugin(['AMap.Scale'], function() {
+            map.addControl(new AMap.Scale({ position: { bottom: '20px', left: '15px' } }));
+          });
+
+          // Load province GeoJSON and draw visited regions
+          fetch('assets/geo/china.json')
+            .then(function(r) { return r.json(); })
+            .then(function(geoJson) {
+              var visitedNames = new Set(visitedLocations.map(function(l) { return l.name; }));
+              var visitedPolygons = [];
+
+              geoJson.features.forEach(function(feature) {
+                var name = feature.properties.name.replace(/市|省|自治区|回族|壮族|维吾尔|特别行政区/g, '');
+                if (!visitedNames.has(name)) return;
+
+                var coords = feature.geometry.coordinates;
+                var polygons = coords.length === 1 ? coords : coords[0];
+
+                polygons.forEach(function(ring) {
+                  var poly = new AMap.Polygon({
+                    path: ring,
+                    strokeColor: '#5ee7df',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 1,
+                    fillColor: '#06beb6',
+                    fillOpacity: 0.08,
+                    zIndex: 10
+                  });
+                  visitedPolygons.push(poly);
+                  map.add(poly);
+                });
+              });
+
+              // Fit view to visited polygons
+              if (visitedPolygons.length > 0) {
+                map.setFitView(visitedPolygons, false, [60, 60, 60, 60]);
+              }
+            });
+
+          // Add markers for visited cities
+          visitedLocations.forEach(function(loc) {
+            var parts = loc.coordinates.split(',');
+            var lng = parseFloat(parts[0]);
+            var lat = parseFloat(parts[1]);
+
+            var marker = new AMap.Marker({
+              position: [lng, lat],
+              content: '<div style="width:12px;height:12px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+              offset: new AMap.Pixel(-6, -6),
+              map: map
+            });
+
+            marker.setTitle(loc.name);
+          });
+
+          // Resize handler
+          window.addEventListener('resize', function() { map.resize(); });
+        }
+
+        initMap();
       })();
     </script>
 
