@@ -29,6 +29,10 @@
           <a href="mailto:yueruiqing.edu@gmail.com">📧 Email</a> &nbsp;/&nbsp;
           <a href="https://github.com/yuranqiu" target="_blank">💻 GitHub</a> &nbsp;/&nbsp;
           <a href="https://www.linkedin.com/in/ruiqing-yue-90628a40a" target="_blank">🔗 LinkedIn</a> &nbsp;/&nbsp;
+          <a href="https://orcid.org/0009-0004-4125-3511" target="_blank"><img src="assets/img/orcid.svg" class="profile-link-brand-icon" alt="">ORCID</a>
+          <br>
+          <a href="https://dblp.org/pid/369/7332" target="_blank"><img src="assets/img/dblp.svg" class="profile-link-brand-icon" alt="">DBLP</a> &nbsp;/&nbsp;
+          <a href="https://scholar.google.com/citations?view_op=list_works&amp;hl=en&amp;user=ausT8TMAAAAJ" target="_blank"><img src="assets/img/google-scholar.svg" class="profile-link-brand-icon" alt="">Google Scholar</a> &nbsp;/&nbsp;
           <a href="https://discord.com/users/1176069288847741000" target="_blank">💬 Discord</a>
         </p>
       </div>
@@ -168,6 +172,21 @@
       </div>
     </div>
 
+    <div class="pub-row">
+      <div class="pub-image">
+        <img src="assets/img/ncut.png" alt="North China University of Technology" class="exp-logo">
+      </div>
+      <div class="pub-text">
+        <p>
+          <b>North China University of Technology</b>
+          <br>
+          <b>Bachelor's Degree</b>
+          <br>
+          Sep 2021 <b>&ndash;</b> Jun 2025
+        </p>
+      </div>
+    </div>
+
     <hr>
 
     <!-- Footprints -->
@@ -178,7 +197,9 @@
         var container = document.getElementById('footprints-map');
         if (!container) return;
 
-        var API_KEY = 'cd3b5db269daf2cfe3b0ad0a5e4e1b8f';
+        var API_KEY = '45aa937afecba99dba949952aea1daf8';
+        // AMap requires the JS security code to be configured before its SDK loads.
+        var AMAP_SECURITY_CODE = 'cd3b5db269daf2cfe3b0ad0a5e4e1b8f';
 
         var visitedLocations = [
           {name:'北京', coordinates:'116.4074,39.9042'},
@@ -200,6 +221,12 @@
           {name:'青岛', coordinates:'120.3826,36.0671'},
           {name:'西安', coordinates:'108.9402,34.3416'},
           {name:'汉中', coordinates:'107.0280,33.0677'},
+          {name:'宝鸡', coordinates:'107.1449,34.3693'},
+          {name:'咸阳', coordinates:'108.7051,34.3334'},
+          {name:'渭南', coordinates:'109.5029,34.4994'},
+          {name:'铜川', coordinates:'108.9796,34.9166'},
+          {name:'延安', coordinates:'109.4908,36.5965'},
+          {name:'榆林', coordinates:'109.7341,38.2858'},
           {name:'成都', coordinates:'104.0658,30.6598'},
           {name:'德阳', coordinates:'104.3980,31.1270'},
           {name:'绵阳', coordinates:'104.6790,31.4670'},
@@ -224,19 +251,29 @@
           {name:'万宁', coordinates:'110.3900,18.8000'},
           {name:'定安', coordinates:'110.3235,19.6848'},
           {name:'陵水', coordinates:'110.0370,18.5050'},
-          {name:'琼海', coordinates:'110.4669,19.2576'}
+          {name:'琼海', coordinates:'110.4669,19.2576'},
+          {name:'鄂尔多斯', districtName:'鄂尔多斯市', coordinates:'109.7809,39.6085'},
+          {name:'呼和浩特', districtName:'呼和浩特市', coordinates:'111.7492,40.8426'},
+          {name:'乌兰察布', districtName:'乌兰察布市', coordinates:'113.1322,40.9945'},
+          {name:'张家口', districtName:'张家口市', coordinates:'114.8841,40.8119'}
         ];
 
         function initMap() {
           if (typeof AMap === 'undefined') {
             var script = document.createElement('script');
+            if (AMAP_SECURITY_CODE) {
+              window._AMapSecurityConfig = { securityJsCode: AMAP_SECURITY_CODE };
+            }
             script.src = 'https://webapi.amap.com/maps?v=2.0&key=' + API_KEY;
             script.onload = function() {
-              window._AMapSecurityConfig = { securityJsCode: '' };
+              if (typeof AMap === 'undefined') {
+                showMapError('地图服务初始化失败，请检查高德地图 Key 配置。');
+                return;
+              }
               createMap();
             };
             script.onerror = function() {
-              container.innerHTML = '<p style="text-align:center;color:#999;padding-top:180px;">地图加载失败</p>';
+              showMapError('地图服务连接失败，请稍后重试。');
             };
             document.head.appendChild(script);
           } else {
@@ -244,14 +281,24 @@
           }
         }
 
+        function showMapError(message) {
+          container.innerHTML = '<p style="text-align:center;color:#999;padding-top:180px;">' + message + '</p>';
+        }
+
         function createMap() {
-          var map = new AMap.Map(container, {
-            zoom: 4,
-            center: [105, 36],
-            mapStyle: 'amap://styles/normal',
-            viewMode: '2D',
-            pitch: 0
-          });
+          var map;
+          try {
+            map = new AMap.Map(container, {
+              zoom: 4,
+              center: [105, 36],
+              mapStyle: 'amap://styles/normal',
+              viewMode: '2D',
+              pitch: 0
+            });
+          } catch (error) {
+            showMapError('地图创建失败，请检查高德地图 Key 配置。');
+            return;
+          }
 
           AMap.plugin(['AMap.Scale'], function() {
             map.addControl(new AMap.Scale({ position: { bottom: '20px', left: '15px' } }));
@@ -259,16 +306,27 @@
 
           // Load city GeoJSON (china-merged) and draw visited regions
           Promise.all([
-            fetch('assets/geo/china-merged.json').then(function(r) { return r.json(); })
+            fetch('assets/geo/china-merged.json').then(function(r) {
+              if (!r.ok) throw new Error('GeoJSON request failed');
+              return r.json();
+            }),
+            fetch('assets/geo/added-cities.json').then(function(r) {
+              if (!r.ok) throw new Error('Additional city GeoJSON request failed');
+              return r.json();
+            })
           ])
             .then(function(results) {
-              var cityGeoJson = results[0];
+              var cityGeoJson = {
+                features: results[0].features.concat(results[1].features)
+              };
               var visitedNames = new Set(visitedLocations.map(function(l) { return l.name; }));
+              var outlinedNames = new Set();
               var visitedPolygons = [];
 
               cityGeoJson.features.forEach(function(feature) {
                 var name = feature.properties.name;
                 if (!visitedNames.has(name)) return;
+                outlinedNames.add(name);
 
                 var coords = feature.geometry.coordinates;
                 var rings = feature.geometry.type === 'Polygon' ? [coords] : coords;
@@ -292,6 +350,9 @@
               if (visitedPolygons.length > 0) {
                 map.setFitView(visitedPolygons, false, [60, 60, 60, 60]);
               }
+            })
+            .catch(function() {
+              // Keep the base map visible if the optional footprint overlay fails.
             });
 
           // Resize handler
@@ -314,16 +375,16 @@
         <b>🏊 Swimming</b> — Currently learning and practicing regularly.
       </p>
       <p>
-        <b>🏍️ Motorcycling</b> — Owner of a <b>Benelli Leoncino 500</b> with <b>3,000 km</b> on the odometer and counting.
+        <b>🏍️ Motorcycling</b> — Owner of a <b>Benelli Leoncino 500</b> with <b>7,000 km</b> on the odometer and counting.
       </p>
     </div>
 
     <hr>
 
-    <!-- Clustermap -->
+    <!-- MapMyVisitors 2D visitor map -->
     <div style="text-align:center;margin-top:16px;">
       <div style="display:inline-block;width:150px;">
-        <script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=wRczDcorvg7Bh8z2vH_cr2wUhFbxPxGbticcgCJfOSQ"></script>
+        <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=TzD2Tloeb2U5vfN2GzzamudAUYJl442T0uk4Jx8x2v8&cl=ffffff&w=a"></script>
       </div>
     </div>
 

@@ -16,6 +16,8 @@ public/
 
 # OS
 .DS_Store
+Thumbs.db
+desktop.ini
 
 # Logs
 *.log
@@ -25,9 +27,25 @@ public/
 .idea/
 *.sw?
 
+# Python local preview
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Temporary files
+*.tmp
+*.bak
+
 # Gem
 *.gem
 
 # Misc
 .cache/
+.agents/
 CLAUDE.md
