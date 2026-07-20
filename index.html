@@ -115,6 +115,23 @@
 
     <div class="pub-row">
       <div class="pub-image">
+        <img src="assets/img/humorsafe-fig1.png" alt="HumorSafe overview" style="height:100px;width:auto;max-width:100%;">
+      </div>
+      <div class="pub-text">
+        <p>
+          <a href="https://arxiv.org/abs/2607.15977v1" target="_blank">Refusal is Not Safety! Benchmarking Latent Safety Risks of LLM-Driven Content Humorization</a>
+          <br>
+          Yu Cui, <b>Ruiqing Yue</b>, Tingyu Li, Sicheng Pan, Zhuoyu Sun, Xufeng Zhang, Baohan Huang, Haibin Zhang, Cong Zuo
+          <br>
+          <em><b>arXiv</b></em>, 2026
+          <br>
+          We introduce HumorSafe to benchmark latent safety risks in LLM-driven content humorization, showing that frontier LLMs can introduce stereotypes and toxicity; HumorPIA further reveals how these risks can conceal harmful prompt injections behind seemingly safe humorous refusals.
+        </p>
+      </div>
+    </div>
+
+    <div class="pub-row">
+      <div class="pub-image">
         <img src="assets/img/spore-fig1.png" alt="Spore Figure 1" style="height:100px;width:auto;max-width:100%;">
       </div>
       <div class="pub-text">
@@ -233,7 +250,9 @@
           {name:'广元', coordinates:'105.8297,32.4357'},
           {name:'遂宁', coordinates:'105.5929,30.5130'},
           {name:'内江', coordinates:'105.0584,29.5801'},
+          {name:'自贡', coordinates:'104.7734,29.3528'},
           {name:'乐山', coordinates:'103.7658,29.5520'},
+          {name:'宜宾', coordinates:'104.6434,28.7513'},
           {name:'南充', coordinates:'106.1107,30.8373'},
           {name:'眉山', coordinates:'103.8483,30.0756'},
           {name:'巴中', coordinates:'106.7570,31.8690'},
@@ -329,16 +348,22 @@
                 outlinedNames.add(name);
 
                 var coords = feature.geometry.coordinates;
-                var rings = feature.geometry.type === 'Polygon' ? [coords] : coords;
+                var polygons = feature.geometry.type === 'Polygon' ? [coords] : coords;
 
-                rings.forEach(function(ring) {
+                polygons.forEach(function(polygon) {
+                  // AMap.Polygon needs a single outer ring as its path.  Passing a
+                  // GeoJSON polygon (an extra array level) works inconsistently for
+                  // some MultiPolygon features, causing the overlay to disappear.
+                  var outerRing = polygon[0];
+                  if (!outerRing || outerRing.length < 3) return;
+
                   var poly = new AMap.Polygon({
-                    path: ring,
+                    path: outerRing,
                     strokeColor: '#5ee7df',
                     strokeOpacity: 0.8,
                     strokeWeight: 1,
-                    fillColor: '#06beb6',
-                    fillOpacity: 0.08,
+                    fillColor: '#00d4c8',
+                    fillOpacity: 0.28,
                     zIndex: 10
                   });
                   visitedPolygons.push(poly);
@@ -372,7 +397,7 @@
         <b>🏋️ Fitness</b> — I enjoy strength training and currently have a bench press PR of <b>90 kg</b>.
       </p>
       <p>
-        <b>🏊 Swimming</b> — Currently learning and practicing regularly.
+        <b>🏊 Swimming</b> — Currently learning and practicing regularly; I have also tried swimming in the Jinsha River and the Yangtze River.
       </p>
       <p>
         <b>🏍️ Motorcycling</b> — Owner of a <b>Benelli Leoncino 500</b> with <b>7,000 km</b> on the odometer and counting.
