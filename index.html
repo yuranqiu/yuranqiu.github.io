@@ -308,13 +308,16 @@
             map.addControl(new AMap.Scale({ position: { bottom: '20px', left: '15px' } }));
           });
 
-          // Load city GeoJSON (china-merged) and draw visited regions
+          // Load city GeoJSON (china-merged) and draw visited regions.
+          // Bump GEO_VERSION whenever these files change so returning visitors
+          // don't keep drawing from a cached older copy of the boundaries.
+          var GEO_VERSION = '20261022';
           Promise.all([
-            fetch('assets/geo/china-merged.json').then(function(r) {
+            fetch('assets/geo/china-merged.json?v=' + GEO_VERSION).then(function(r) {
               if (!r.ok) throw new Error('GeoJSON request failed');
               return r.json();
             }),
-            fetch('assets/geo/added-cities.json').then(function(r) {
+            fetch('assets/geo/added-cities.json?v=' + GEO_VERSION).then(function(r) {
               if (!r.ok) throw new Error('Additional city GeoJSON request failed');
               return r.json();
             })
